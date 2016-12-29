@@ -1,11 +1,16 @@
 package laochanlam.app;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -75,6 +80,21 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
     @Override
     public boolean onTouch(View v , MotionEvent event){
         long CurrentTime = SystemClock.elapsedRealtime()/1000;
+
+        if (TimeCounter > 5)
+        {
+            final int notifyID = 1;
+            final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                final Notification notification = new NotificationCompat.Builder(this)
+                                                                        .setSmallIcon(R.drawable.ic_launcher)
+                                                                        .setContentTitle("溫馨提示")
+                                                                        .setContentText("您已滑手機超過5秒囉")
+                                                                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+                                                                        .setAutoCancel(true)
+                                                                        .build();
+            notificationManager.notify(notifyID, notification);
+        }
 
         if (CurrentTime - PrevTime < 30)  // Count in 30sec.
         {
