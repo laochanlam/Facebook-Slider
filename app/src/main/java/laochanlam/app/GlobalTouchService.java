@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import java.util.Objects;
 
 
 public class GlobalTouchService extends Service implements View.OnTouchListener{
@@ -21,6 +23,9 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
     private WindowManager mWindowManager;
 
     private LinearLayout touchLayout;
+
+    private long TimeCounter = 0;
+    private long PrevTime = 0;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -42,8 +47,8 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
 
 
         WindowManager.LayoutParams mParams = new WindowManager.LayoutParams(
-                50,
-                50,
+                1,
+                1,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
                         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
@@ -69,14 +74,23 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(View v , MotionEvent event){
+        long CurrentTime = SystemClock.elapsedRealtime()/1000;
 
-
+        if (CurrentTime - PrevTime < 30)  // Count in 30sec.
+        {
+            TimeCounter = TimeCounter + (CurrentTime - PrevTime);
+            PrevTime = CurrentTime;
+        }
+        else
+        {
+            PrevTime = CurrentTime;
+        }
 
         Log.d(TAG, "Touch event: " + event.toString());
-       if(event.getAction() == MotionEvent.ACTION_OUTSIDE)//|| event.getAction()==MotionEvent.ACTION_UP
-           Log.i(TAG,"Action" + event.getAction() + "\t X:" + event.getRawX() + "\t Y:" + event.getRawY());
-
-
+       if(event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+           Log.i(TAG,  Objects.toString(TimeCounter, null));
+           Log.i(TAG, "Action" + event.getAction() + "\t X:" + event.getRawX() + "\t Y:" + event.getRawY());
+       }
         return false;
     }
 

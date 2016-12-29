@@ -7,7 +7,6 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,20 +19,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button Startbutton = (Button) findViewById(R.id.Startbutton);
+//        Button Startbutton = (Button) findViewById(R.id.Startbutton);
 
 
-        if (Build.VERSION.SDK_INT >= 23) {  // Version
-            if (!Settings.canDrawOverlays(getApplicationContext())) {
+        if (Build.VERSION.SDK_INT >= 23)
+        {  // Version
+            if (!Settings.canDrawOverlays(getApplicationContext()))
+            {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                 startActivity(intent);
-
-            } else {
-                globalService = new Intent(this, GlobalTouchService.class);
             }
-        }else {
-            globalService = new Intent(this,GlobalTouchService.class);
+            else
+                globalService = new Intent(this, GlobalTouchService.class);
         }
+        else
+            globalService = new Intent(this,GlobalTouchService.class);
     }
 
     public void StartbuttonClicked(View v){
