@@ -3,23 +3,81 @@ package laochanlam.app;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     Intent globalService;
+    public static Handler handler;
+    RelativeLayout relativeLayout;
     private String TAG = this.getClass().getSimpleName();
+    RelativeLayout.LayoutParams ViewLayoutParams;
+    boolean ServiceFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Button Startbutton = (Button) findViewById(R.id.Startbutton);
+    handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
+                    TextView view_for_5sec = new TextView(MainActivity.this);
+                    view_for_5sec.setId(1);
+                    view_for_5sec.setText("你已經滑動了五秒!!!");
+                    ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                    ViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.Startbutton);
+                    ViewLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, R.id.Startbutton);
+
+                    view_for_5sec.setLayoutParams(ViewLayoutParams);
+                    relativeLayout.addView(view_for_5sec);
+                    setContentView(relativeLayout);
+                    break;
+                case 2:
+                    relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
+                    TextView view_for_10sec = new TextView(MainActivity.this);
+                    view_for_10sec.setId(2);
+                    view_for_10sec.setText("你已經滑動了十秒!!!");
+                    ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                    ViewLayoutParams.addRule(RelativeLayout.BELOW, 1);
+                    ViewLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL,1);
+
+                    view_for_10sec.setLayoutParams(ViewLayoutParams);
+                    relativeLayout.addView(view_for_10sec);
+                    setContentView(relativeLayout);
+                    break;
+                case 3:
+                    relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
+                    TextView view_for_30sec = new TextView(MainActivity.this);
+                    view_for_30sec.setId(3);
+                    view_for_30sec.setText("你已經滑動了三十秒!!!");
+                    ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                    ViewLayoutParams.addRule(RelativeLayout.BELOW, 2);
+                    ViewLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL,2);
+
+                    view_for_30sec.setLayoutParams(ViewLayoutParams);
+                    relativeLayout.addView(view_for_30sec);
+                    setContentView(relativeLayout);
+                    break;
+            }
+
+        }
+    };
 
 
         if (Build.VERSION.SDK_INT >= 23)
@@ -37,19 +95,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void StartbuttonClicked(View v){
-        if (v.getTag() == null){
+        if (ServiceFlag  == false){
             Log.i(TAG, "Start");
             startService(globalService);
-            v.setTag("on");
+            ServiceFlag  = !ServiceFlag;
             Toast.makeText(this, "Start Service", Toast.LENGTH_SHORT).show();
         }
-        else if (v.getTag() == "on"){
-            Log.i(TAG, "Stop");
-            stopService(globalService);
-            v.setTag(null);
-            Toast.makeText(this, "Stop Service", Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void ResetButtonClicked(View v){
+            if (ServiceFlag == true) {
+                Log.i(TAG, "Stop");
+                stopService(globalService);
+                ServiceFlag  = !ServiceFlag;
+                Toast.makeText(this, "Stop Service", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
 
 }

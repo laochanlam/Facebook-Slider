@@ -5,7 +5,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,13 +22,13 @@ import java.util.Objects;
 public class GlobalTouchService extends Service implements View.OnTouchListener{
 
     private String TAG = this.getClass().getSimpleName();
-
     private WindowManager mWindowManager;
-
     private LinearLayout touchLayout;
 
     private long TimeCounter = 0;
     private long PrevTime = 0;
+
+    public static Handler PauseHandler;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -80,28 +82,21 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
     boolean ShowAlert_5sec = false;
     boolean ShowAlert_10sec = false;
     boolean ShowAlert_30sec = false;
-
+    Message msg;
 
     @Override
     public boolean onTouch(View v , MotionEvent event){
         long CurrentTime = SystemClock.elapsedRealtime()/1000;
 
-        if (TimeCounter > 5 && !ShowAlert_5sec)
+        if (TimeCounter >= 5 && !ShowAlert_5sec)
         {
             ShowAlert_5sec = true;
-            /**********************************Notification****************************/
-//            final int notifyID = 1;
-//            final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//                final Notification notification = new NotificationCompat.Builder(this)
-//                                                                        .setSmallIcon(R.drawable.ic_launcher)
-//                                                                        .setContentTitle("溫馨提示")
-//                                                                        .setContentText("您已滑手機超過5秒囉")
-//                                                                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
-//                                                                        .setAutoCancel(true)
-//                                                                        .build();
-//            notificationManager.notify(notifyID, notification);
-            /**********************************Notification****************************/
+
+            /**********************************Send Message to Activity****************************/
+            msg = new Message();
+            msg.what = 1;
+            MainActivity.handler.sendMessage(msg);
+            /**********************************Send Message to Activity****************************/
 
 
             /**********************************AlertDialog****************************/
@@ -116,9 +111,16 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
             /**********************************AlertDialog****************************/
         }
 
-        if (TimeCounter > 10 && !ShowAlert_10sec)
+        if (TimeCounter >= 10 && !ShowAlert_10sec)
         {
             ShowAlert_10sec = true;
+
+            /**********************************Send Message to Activity****************************/
+            msg = new Message();
+            msg.what = 2;
+            MainActivity.handler.sendMessage(msg);
+            /**********************************Send Message to Activity****************************/
+
 
             /**********************************AlertDialog****************************/
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -132,9 +134,16 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
             /**********************************AlertDialog****************************/
         }
 
-        if (TimeCounter > 30 && !ShowAlert_30sec)
+        if (TimeCounter >= 30 && !ShowAlert_30sec)
         {
             ShowAlert_30sec = true;
+
+            /**********************************Send Message to Activity****************************/
+            msg = new Message();
+            msg.what = 3;
+            MainActivity.handler.sendMessage(msg);
+            /**********************************Send Message to Activity****************************/
+
 
             /**********************************AlertDialog****************************/
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -172,3 +181,17 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
 
 
 }
+
+/**********************************Notification****************************/
+//            final int notifyID = 1;
+//            final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//                final Notification notification = new NotificationCompat.Builder(this)
+//                                                                        .setSmallIcon(R.drawable.ic_launcher)
+//                                                                        .setContentTitle("溫馨提示")
+//                                                                        .setContentText("您已滑手機超過5秒囉")
+//                                                                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+//                                                                        .setAutoCancel(true)
+//                                                                        .build();
+//            notificationManager.notify(notifyID, notification);
+/**********************************Notification****************************/
