@@ -39,65 +39,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         startButton = (Button) findViewById(R.id.Startbutton);
+        textMsg = (TextView) findViewById(R.id.textMsg);
 
         handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            //textMsg.append(msg);
-            switch (msg.what) {
-                case 1:
-                    relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
-                    view_for_5sec = new TextView(MainActivity.this);
-                    view_for_5sec.setId(1);
-                    view_for_5sec.setText("你已經滑動了五秒!!!");
-                    ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-                    ViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.Startbutton);
-                    ViewLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, R.id.Startbutton);
-
-                    view_for_5sec.setLayoutParams(ViewLayoutParams);
-                    relativeLayout.addView(view_for_5sec);
-                    ViewItem.push(view_for_5sec);
-                    setContentView(relativeLayout);
-                    break;
-                case 2:
-                    relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
-                    view_for_10sec = new TextView(MainActivity.this);
-                    view_for_10sec.setId(2);
-                    view_for_10sec.setText("你已經滑動了十秒!!!");
-                    ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-                    ViewLayoutParams.addRule(RelativeLayout.BELOW, 1);
-                    ViewLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL,1);
-
-                    view_for_10sec.setLayoutParams(ViewLayoutParams);
-                    relativeLayout.addView(view_for_10sec);
-                    ViewItem.push(view_for_10sec);
-                    setContentView(relativeLayout);
-                    break;
-                case 3:
-                    relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
-                    view_for_30sec = new TextView(MainActivity.this);
-                    view_for_30sec.setId(3);
-                    view_for_30sec.setText("你已經滑動了三十秒!!!");
-                    ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-                    ViewLayoutParams.addRule(RelativeLayout.BELOW, 2);
-                    ViewLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL,2);
-
-                    view_for_30sec.setLayoutParams(ViewLayoutParams);
-                    relativeLayout.addView(view_for_30sec);
-                    ViewItem.push(view_for_30sec);
-                    setContentView(relativeLayout);
-                    break;
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                textMsg.append("\n您已經滑動手機 " + msg.what + " 秒。");
             }
+        };
 
-        }
-    };
-
-        if (Build.VERSION.SDK_INT >= 23)
-        {  // Version
+        if (Build.VERSION.SDK_INT >= 23) { // Version
             if (!Settings.canDrawOverlays(getApplicationContext()))
             {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
@@ -105,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else
                 globalService = new Intent(this, GlobalTouchService.class);
-        }
-        else
-            globalService = new Intent(this,GlobalTouchService.class);
+        } else globalService = new Intent(this,GlobalTouchService.class);
     }
 
     public void StartbuttonClicked(View v){

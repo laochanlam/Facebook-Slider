@@ -27,7 +27,6 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
     private long TimeCounter = 0;
     private long PrevTime = 0;
 
-
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -36,7 +35,6 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
     @Override
     public void onCreate(){
         super.onCreate();
-
 
         /**********************************Fake View****************************/
         touchLayout = new LinearLayout(this);

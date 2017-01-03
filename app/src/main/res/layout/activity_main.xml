@@ -24,7 +24,7 @@
         android:id="@+id/ResetButton" />
 
     <TextView
-        android:text="TextView"
+        android:text="Hello"
         android:layout_width="match_parent"
         android:layout_height="400px"
         android:layout_below="@+id/Startbutton"
