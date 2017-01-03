@@ -1,13 +1,18 @@
 package laochanlam.app;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -98,6 +103,20 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
             AlertDialog.show();
             /**********************************AlertDialog****************************/
 
+            /**********************************Notification****************************/
+            final int notifyID = 1;
+            final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            final Notification notification = new NotificationCompat.Builder(this)
+                                                                    .setSmallIcon(R.drawable.ic_launcher)
+                                                                    .setContentTitle("溫馨提示")
+                                                                    .setContentText("您已經滑動手機 " + msg.what + " 秒。")
+                                                                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+                                                                    .setAutoCancel(true)
+                                                                    .build();
+            notificationManager.notify(notifyID, notification);
+            /**********************************Notification****************************/
+
             return;
         }
     }
@@ -125,16 +144,3 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
 
 }
 
-/**********************************Notification****************************/
-//            final int notifyID = 1;
-//            final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//                final Notification notification = new NotificationCompat.Builder(this)
-//                                                                        .setSmallIcon(R.drawable.ic_launcher)
-//                                                                        .setContentTitle("溫馨提示")
-//                                                                        .setContentText("您已滑手機超過5秒囉")
-//                                                                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
-//                                                                        .setAutoCancel(true)
-//                                                                        .build();
-//            notificationManager.notify(notifyID, notification);
-/**********************************Notification****************************/
