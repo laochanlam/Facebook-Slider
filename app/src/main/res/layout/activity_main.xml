@@ -9,7 +9,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="200px"
-        android:text="Start/Pause"
+        android:text="Start"
         android:onClick="StartbuttonClicked"
         android:id="@+id/Startbutton"
         android:layout_alignParentTop="true" />

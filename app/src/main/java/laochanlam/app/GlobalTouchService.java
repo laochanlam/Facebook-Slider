@@ -82,7 +82,7 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(View v , MotionEvent event){
-        long CurrentTime = SystemClock.elapsedRealtime()/1000;
+        long CurrentTime = SystemClock.elapsedRealtime() / 1000;
 
         if (TimeCounter >= 5 && !ShowAlert_5sec)
         {

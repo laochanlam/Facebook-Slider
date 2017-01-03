@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout.LayoutParams ViewLayoutParams;
     boolean ServiceFlag = false;
     Stack ViewItem = new Stack();
+    private Button startButton;
 
 
     TextView view_for_5sec,view_for_10sec,view_for_30sec;
@@ -35,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startButton = (Button) findViewById(R.id.Startbutton);
 
-    handler = new Handler() {
+        handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -106,18 +109,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void StartbuttonClicked(View v){
-        if (ServiceFlag  == false){
+        ServiceFlag = !ServiceFlag;
+        if (ServiceFlag) {
             Log.i(TAG, "Start");
             startService(globalService);
-            ServiceFlag  = !ServiceFlag;
             Toast.makeText(this, "Start Service", Toast.LENGTH_SHORT).show();
+            startButton.setText("Stop");
+        } else {
+            Log.i(TAG, "Stop");
+            stopService(globalService);
+            Toast.makeText(this, "Stop Service", Toast.LENGTH_SHORT).show();
+            startButton.setText("Start");
         }
-
     }
 
-
     public void ResetButtonClicked(View v){
-            if (ServiceFlag == true) {
+            if (ServiceFlag) {
+                ServiceFlag = false;
                 while (!ViewItem.empty())
                 {
                     relativeLayout.removeView((View)ViewItem.peek());
@@ -125,10 +133,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.i(TAG, "Stop");
                 stopService(globalService);
-                ServiceFlag  = !ServiceFlag;
                 Toast.makeText(this, "Stop Service", Toast.LENGTH_SHORT).show();
+                startButton.setText("Start");
         }
     }
-
-
 }
