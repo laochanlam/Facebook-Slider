@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.SystemClock;
@@ -28,7 +27,6 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
     private long TimeCounter = 0;
     private long PrevTime = 0;
 
-    public static Handler PauseHandler;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -67,14 +65,12 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
 
     }
 
-
-
-
     @Override
     public void onDestroy(){
         if (mWindowManager != null){
             if (touchLayout != null) mWindowManager.removeView(touchLayout);
         }
+
         super.onDestroy();
     }
 

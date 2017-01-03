@@ -1,9 +1,13 @@
 package laochanlam.app;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +16,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private String TAG = this.getClass().getSimpleName();
     RelativeLayout.LayoutParams ViewLayoutParams;
     boolean ServiceFlag = false;
+    Stack ViewItem = new Stack();
+
+
+    TextView view_for_5sec,view_for_10sec,view_for_30sec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1:
                     relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
-                    TextView view_for_5sec = new TextView(MainActivity.this);
+                    view_for_5sec = new TextView(MainActivity.this);
                     view_for_5sec.setId(1);
                     view_for_5sec.setText("你已經滑動了五秒!!!");
                     ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -44,11 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
                     view_for_5sec.setLayoutParams(ViewLayoutParams);
                     relativeLayout.addView(view_for_5sec);
+                    ViewItem.push(view_for_5sec);
                     setContentView(relativeLayout);
                     break;
                 case 2:
                     relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
-                    TextView view_for_10sec = new TextView(MainActivity.this);
+                    view_for_10sec = new TextView(MainActivity.this);
                     view_for_10sec.setId(2);
                     view_for_10sec.setText("你已經滑動了十秒!!!");
                     ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -58,11 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
                     view_for_10sec.setLayoutParams(ViewLayoutParams);
                     relativeLayout.addView(view_for_10sec);
+                    ViewItem.push(view_for_10sec);
                     setContentView(relativeLayout);
                     break;
                 case 3:
                     relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
-                    TextView view_for_30sec = new TextView(MainActivity.this);
+                    view_for_30sec = new TextView(MainActivity.this);
                     view_for_30sec.setId(3);
                     view_for_30sec.setText("你已經滑動了三十秒!!!");
                     ViewLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -72,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
                     view_for_30sec.setLayoutParams(ViewLayoutParams);
                     relativeLayout.addView(view_for_30sec);
+                    ViewItem.push(view_for_30sec);
                     setContentView(relativeLayout);
                     break;
             }
 
         }
     };
-
 
         if (Build.VERSION.SDK_INT >= 23)
         {  // Version
@@ -101,19 +112,23 @@ public class MainActivity extends AppCompatActivity {
             ServiceFlag  = !ServiceFlag;
             Toast.makeText(this, "Start Service", Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
     public void ResetButtonClicked(View v){
             if (ServiceFlag == true) {
+                while (!ViewItem.empty())
+                {
+                    relativeLayout.removeView((View)ViewItem.peek());
+                    ViewItem.pop();
+                }
                 Log.i(TAG, "Stop");
                 stopService(globalService);
                 ServiceFlag  = !ServiceFlag;
                 Toast.makeText(this, "Stop Service", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
 
 }
