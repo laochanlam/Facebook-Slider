@@ -74,102 +74,51 @@ public class GlobalTouchService extends Service implements View.OnTouchListener{
         super.onDestroy();
     }
 
-
-    boolean ShowAlert_5sec = false;
-    boolean ShowAlert_10sec = false;
-    boolean ShowAlert_30sec = false;
     Message msg;
+
+    private void checkPoints(long change) {
+        long[] points = {5000, 10000, 30000};
+        TimeCounter += change;
+        Log.i(TAG, TimeCounter + " " + change);
+        for (int i = 0; i < points.length; i++) {
+            if (TimeCounter < points[i]) return;
+            if (TimeCounter - change > points[i]) continue;
+            /**********************************Send Message to Activity****************************/
+            msg = new Message();
+            msg.what = (int) points[i] / 1000;
+            MainActivity.handler.sendMessage(msg);
+            /**********************************Send Message to Activity****************************/
+
+            /**********************************AlertDialog****************************/
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.app_name);
+            builder.setPositiveButton("關閉", null);
+            builder.setIcon(R.drawable.ic_launcher);
+            builder.setMessage("您已經滑動手機 " + msg.what + " 秒。");
+            AlertDialog AlertDialog = builder.create();
+            AlertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            AlertDialog.show();
+            /**********************************AlertDialog****************************/
+
+            return;
+        }
+    }
 
     @Override
     public boolean onTouch(View v , MotionEvent event){
-        long CurrentTime = SystemClock.elapsedRealtime() / 1000;
+        long CurrentTime = SystemClock.elapsedRealtime();
 
-        if (TimeCounter >= 5 && !ShowAlert_5sec)
-        {
-            ShowAlert_5sec = true;
-
-            /**********************************Send Message to Activity****************************/
-            msg = new Message();
-            msg.what = 1;
-            MainActivity.handler.sendMessage(msg);
-            /**********************************Send Message to Activity****************************/
-
-
-            /**********************************AlertDialog****************************/
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.app_name);
-            builder.setPositiveButton("關閉",null);
-            builder.setIcon(R.drawable.ic_launcher);
-            builder.setMessage("您已經滑動手機5秒。");
-            AlertDialog AlertDialog = builder.create();
-            AlertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-            AlertDialog.show();
-            /**********************************AlertDialog****************************/
+        if (CurrentTime - PrevTime < 30000) { // session gap = 30s
+            checkPoints(CurrentTime - PrevTime);
         }
-
-        if (TimeCounter >= 10 && !ShowAlert_10sec)
-        {
-            ShowAlert_10sec = true;
-
-            /**********************************Send Message to Activity****************************/
-            msg = new Message();
-            msg.what = 2;
-            MainActivity.handler.sendMessage(msg);
-            /**********************************Send Message to Activity****************************/
-
-
-            /**********************************AlertDialog****************************/
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.app_name);
-            builder.setPositiveButton("關閉",null);
-            builder.setIcon(R.drawable.ic_launcher);
-            builder.setMessage("您已經滑動手機10秒。");
-            AlertDialog AlertDialog = builder.create();
-            AlertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-            AlertDialog.show();
-            /**********************************AlertDialog****************************/
-        }
-
-        if (TimeCounter >= 30 && !ShowAlert_30sec)
-        {
-            ShowAlert_30sec = true;
-
-            /**********************************Send Message to Activity****************************/
-            msg = new Message();
-            msg.what = 3;
-            MainActivity.handler.sendMessage(msg);
-            /**********************************Send Message to Activity****************************/
-
-
-            /**********************************AlertDialog****************************/
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.app_name);
-            builder.setPositiveButton("關閉",null);
-            builder.setIcon(R.drawable.ic_launcher);
-            builder.setMessage("您已經滑動手機30秒。");
-            AlertDialog AlertDialog = builder.create();
-            AlertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-            AlertDialog.show();
-            /**********************************AlertDialog****************************/
-        }
-
-
-
-        if (CurrentTime - PrevTime < 30)  // Count in 30sec.
-        {
-            TimeCounter = TimeCounter + (CurrentTime - PrevTime);
-            PrevTime = CurrentTime;
-        }
-        else
-        {
-            PrevTime = CurrentTime;
-        }
+        PrevTime = CurrentTime;
 
         Log.d(TAG, "Touch event: " + event.toString());
-       if(event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-           Log.i(TAG,  Objects.toString(TimeCounter, null));
-           Log.i(TAG, "Action" + event.getAction() + "\t X:" + event.getRawX() + "\t Y:" + event.getRawY());
-       }
+        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+            Log.i(TAG, Objects.toString(TimeCounter, null));
+            Log.i(TAG, "Action" + event.getAction() + "\t X:" + event.getRawX() + "\t Y:" + event.getRawY());
+        }
+
         return false;
     }
 

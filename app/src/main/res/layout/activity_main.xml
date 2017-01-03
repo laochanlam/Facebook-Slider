@@ -23,4 +23,13 @@
         android:onClick="ResetButtonClicked"
         android:id="@+id/ResetButton" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="400px"
+        android:layout_below="@+id/Startbutton"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textMsg"
+        android:textAlignment="center" />
+
 </RelativeLayout>

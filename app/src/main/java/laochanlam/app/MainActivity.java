@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     boolean ServiceFlag = false;
     Stack ViewItem = new Stack();
     private Button startButton;
+    private TextView textMsg;
 
 
     TextView view_for_5sec,view_for_10sec,view_for_30sec;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            //textMsg.append(msg);
             switch (msg.what) {
                 case 1:
                     relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
